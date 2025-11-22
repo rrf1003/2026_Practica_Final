@@ -23,7 +23,7 @@ class ConfigSingleton:
         self.repo_cache_dir = self.base_dir / "repo_cache"
 
         # 2. Ruta del fichero de Base de Datos SQLite
-        self.db_path = self.base_dir / "analysis.db"
+        self.db_path = self.base_dir / "analysis_v2.db"
 
         # 3. Ventana por defecto para detección de duplicados
         self.duplication_window = 4

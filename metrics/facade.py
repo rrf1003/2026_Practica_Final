@@ -45,6 +45,20 @@ class MetricsFacade:
         """
         if options is None:
             options = {}
+
+        print(f"\n--- 🕵️ DEBUG FACHADA ---")
+        print(f"Analizando ruta absoluta: {repo_path.absolute()}")
+        print(f"¿La carpeta existe?: {repo_path.exists()}")
+        if repo_path.exists():
+            print(f"¿Es un directorio?: {repo_path.is_dir()}")
+            # Listamos qué hay dentro de la raíz (los primeros 5 elementos)
+            contenido = list(repo_path.iterdir())
+            print(f"Contenido raíz ({len(contenido)} items): {[p.name for p in contenido[:5]]}")
+            
+            # Probamos la búsqueda de python
+            archivos_py = list(repo_path.rglob("*.py"))
+            print(f"Archivos .py detectados por rglob: {len(archivos_py)}")
+        print("------------------------\n")
         
         # Preparar contenedores de resultados
         file_metrics_list = []

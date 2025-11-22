@@ -20,23 +20,20 @@ class FunctionsStrategy(MetricStrategy):
             Ej: { "mi_funcion": {"loc": 10, "params": 2, "cc": 3, "max_nesting": 1} }
         """
         results = {}
-
+        
         if not isinstance(ast_node, ast.AST):
             return results
-        
-        # Buscamos tanto funciones normales (def) como asíncronas (async def)
+
         for node in ast.walk(ast_node):
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 func_name = node.name
-
-                # 1. LOC (Líneas de código)
-                # end_lineno existe en Python 3.8+. Antes había que calcularlo dificilmente.
+                
+                # 1. LOC
                 start = getattr(node, 'lineno', 0)
                 end = getattr(node, 'end_lineno', start)
                 loc = (end - start) + 1
 
                 # 2. Número de parámetros
-                # node.args.args contiene los argunmentos posicionales
                 num_params = len(node.args.args)
 
                 # 3. Complejidad Ciclomática (CC)
@@ -51,42 +48,43 @@ class FunctionsStrategy(MetricStrategy):
                     "cc": cc,
                     "max_nesting": max_nesting
                 }
-            
-            return results
-    
+
+        return results
+
     def _compute_cc(self, func_node: ast.AST) -> int:
         """
         Calcula la Complejidad Ciclomática.
-        Base = 1 + 1 por cada punto de decisión (if, for, while, except, etc.)
         """
         complexity = 1
-
-        # Recorremos solo los hijos de ESTA función (no globalmente)
-        for node in ast.walk(func_node):
-            # Puntos de decisión estandar
-            if isinstance(node, (ast.If, ast.For, ast.AsyncFor, ast.While, ast.With, ast.AsyncWith, ast.ExceptHandler, ast.Assert)):
-                complexity += 1
-            elif isinstance(node, ast.BoolOp):
-                complexity += len(node.values) - 1
         
+        for node in ast.walk(func_node):
+            # Puntos de decisión estándar
+            if isinstance(node, (ast.If, ast.For, ast.AsyncFor, ast.While, 
+                                 ast.With, ast.AsyncWith, ast.ExceptHandler, 
+                                 ast.Assert)):
+                complexity += 1
+            
+            # Operadores booleanos (and, or)
+            elif isinstance(node, ast.BoolOp):
+                # --- AQUÍ ESTABA EL POSIBLE ERROR ---
+                # node.values es una lista de operandos. Necesitamos su longitud.
+                complexity += len(node.values) - 1
+                
         return complexity
-    
+
     def _compute_nesting(self, node: ast.AST, current_depth: int = 0) -> int:
         """
         Calcula recursivamente la profundidad máxima de anidamiento.
         """
         max_depth = current_depth
-
-        # Nodos que incrementan el nivel de anidamiento
-        nesting_nodes = (ast.If, ast.For, ast.AsyncFor, ast.While, ast.Try, ast.FunctionDef, ast.AsyncFunctionDef)
+        nesting_nodes = (ast.If, ast.For, ast.AsyncFor, ast.While, 
+                         ast.Try, ast.FunctionDef, ast.AsyncFunctionDef)
 
         for child in ast.iter_child_nodes(node):
             next_depth = current_depth
             if isinstance(child, nesting_nodes):
-                next_depyh += 1
-            
-            # Llamada recursiva
+                next_depth += 1
             child_depth = self._compute_nesting(child, next_depth)
             max_depth = max(max_depth, child_depth)
-        
+            
         return max_depth
