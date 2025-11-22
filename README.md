@@ -26,6 +26,7 @@ Sigue estos pasos para poner en marcha el proyecto en tu entorno local.
 
 ```bash
 git clone [https://github.com/rrf1003/2026_Practica_Final.git](https://github.com/TU_USUARIO/2026_Practica_Final.git)
+
 cd 2026_Practica_Final
 
 ## 📂 Estructura del Proyecto
