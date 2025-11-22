@@ -1,6 +1,4 @@
-from repo.repo_manager import RepoManager
-from pathlib import Path
-import shutil  # Probablemente lo necesites para borrar
+from repo.repo_manager import RepoManager  # Probablemente lo necesites para borrar
 
 
 manager = RepoManager()
