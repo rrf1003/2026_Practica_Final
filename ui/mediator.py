@@ -59,14 +59,14 @@ class OptionsComponent:
 
 class OutputComponent:
     """
-    Responsabilida: Preparar el resultado del análisis para la vista
+    Responsabilidad: Preparar el resultado del análisis para la vista
     """
     def prepare(self, result: Optional[Dict]) -> Dict[str, Any]:
         """
         Transforma el JSON crudo del backend en variables para Jinja2.
         """
         if not result:
-            return {"shoe_output": False}
+            return {"show_output": False}
         
         return {
             "show_output": True,
