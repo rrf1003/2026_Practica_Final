@@ -35,9 +35,10 @@ class RepoManager:
         Elimina un directorio de repositorio local.
         Se usa cuando se fuerza el recálculo (force=True)
         """
-        if path.exists() and path.is_dir():
+        path_obj = Path(path)
+        if path_obj.exists() and path_obj.is_dir():
             # shutil.rmtree elimina recursivamente todo el contenido
-            shutil.rmtree(path, ignore_errors=True)
+            shutil.rmtree(path_obj, ignore_errors=True)
             print(f"[RepoManager] Repositorio eliminado: {path}")
     
     def _extract_repo_name(self, url: str) -> str:
