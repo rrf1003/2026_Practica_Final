@@ -28,7 +28,7 @@ class DBManager:
         CREATE TABLE IF NOT EXISTS analyses (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             repo_url TEXT,
-            analyzed TEXT,
+            analyzed_at TEXT,
             result_json TEXT
         );
         """
