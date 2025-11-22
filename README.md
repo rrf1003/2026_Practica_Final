@@ -32,8 +32,8 @@ cd 2026_Practica_Final
 
 La estructura de archivos ha sido diseñada para asegurar la separación de responsabilidades:
 
-```text
-repo_analyzer/
+
+2026_Practica_Final/
 ├── app.py                 # Punto de entrada de la aplicación Flask
 ├── config.py              # Configuración global (Singleton)
 ├── requirements.txt       # Dependencias del proyecto
