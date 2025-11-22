@@ -44,8 +44,8 @@ class DBManager:
         analyzed_at = result.get("analyzed_at")
 
         # Convertimos el diccionario de resultados a un string JSON
-        resul_json = json.dumps(result)
-
+        result_json = json.dumps(result)
+        
         query = """
         INSERT INTO analyses (repo_url, analyzed_at, result_json)
         VALUES (?, ?, ?)
@@ -53,7 +53,7 @@ class DBManager:
 
         try:
             with self._get_connection() as conn:
-                conn.execute(query, (repo_url, analyzed_at, resul_json))
+                conn.execute(query, (repo_url, analyzed_at, result_json))
         except sqlite3.Error as e:
             print(f"[DBManager] Error al guardar análisis: {e}")
     
@@ -63,9 +63,9 @@ class DBManager:
         Devuelve el diccionario de resultados o None si no existe.
         """
         query = """
-        SELECT result_json FROM analyses
-        WHERE repo_url = ?
-        ORDER BY analyzed_at DESC
+        SELECT result_json FROM analyses 
+        WHERE repo_url = ? 
+        ORDER BY analyzed_at DESC 
         LIMIT 1
         """
 
@@ -84,13 +84,13 @@ class DBManager:
         Se usa para mostrar el historial en la UI
         """
         query = """
-        SELECT result_json FROM analyses
-        ORDER BY analyzed_at DESC
+        SELECT result_json FROM analyses 
+        ORDER BY analyzed_at DESC 
         LIMIT ?
         """
 
         analyses = []
-        with self._get_connection as conn:
+        with self._get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute(query, (limit,))
             rows = cursor.fetchall()
