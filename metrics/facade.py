@@ -112,7 +112,7 @@ class MetricsFacade:
 
         result = {
             # Metadatos generales
-            "analyzed_at": datetime.datetime.now().isoformat,
+            "analyzed_at": datetime.datetime.now().isoformat(),
             "repo_name": repo_path.name,
 
             # Resumen ejecutivo (Summary)
