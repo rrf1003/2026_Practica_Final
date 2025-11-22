@@ -1,0 +1,30 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Entornos Virtuales ---
+venv/
+.venv/
+env/
+.env
+
+# --- Base de Datos (SQLite) ---
+# Importante: No subir la BD con datos de prueba
+*.db
+*.sqlite3
+analysis.db
+
+# --- Cache de la Aplicación (CRÍTICO) ---
+# Aquí es donde RepoManager descarga los repositorios.
+# Nunca debemos subir repositorios ajenos dentro del nuestro.
+repo_cache/
+
+# --- IDEs y Sistema Operativo ---
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# --- Logs ---
+*.log
