@@ -50,20 +50,26 @@ pip install -r requirements.txt
 ### 2. Ejecutar la aplicación
 
 Lanza el servidor web de Flask:
-**python app.py**
-
+```bash
+python app.py
+```
 La aplicación estará disponible en: **http://127.0.0.1:5000**
 La primera vez que analices un repositorio, se creará automáticamente la carpeta repo_cache/ y la base de datos analysis_v2.db.
 
 ### 3. Ejecutar los Tests
 
 Desde la raíz del proyecto, ejecuta:
-**pytest**
+```bash
+pytest
+```
 
 Si quieres ver qué porcentaje del código está cubierto por los tests:
-**pytest --cov=metrics**
+```bash
+pytest --cov=metrics
+```
 
 ### Estructura del Proyecto
+```text
 2026_Practica_Final/
 ├── app.py                      # Punto de entrada (Flask)
 ├── config.py                   # Singleton de Configuración
@@ -98,3 +104,4 @@ Si quieres ver qué porcentaje del código está cubierto por los tests:
 └── tests/                 # Tests Unitarios
     ├── conftest.py        # Fixtures y datos de prueba
     └── test_metrics.py    # Batería de pruebas
+```
