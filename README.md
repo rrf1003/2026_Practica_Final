@@ -1,47 +1,100 @@
-# Repo Analyzer - Analizador de Calidad de Código
+# 📊 Repo Analyzer - Analizador de Calidad de Software
 
-Aplicación web en Flask diseñada para analizar repositorios de GitHub y calcular métricas de calidad de código (Líneas, Complejidad Ciclomática, Duplicación, Mantenibilidad) aplicando patrones de diseño de software avanzados.
+Aplicación web desarrollada en **Python/Flask** que permite analizar repositorios de GitHub para evaluar la calidad de su código mediante métricas estáticas.
 
-> **Estado del proyecto:** 🚧 En desarrollo (Fase de configuración e infraestructura).
+El proyecto ha sido diseñado siguiendo estrictamente principios de **Ingeniería del Software**, implementando múltiples **Patrones de Diseño** para garantizar desacoplamiento, mantenibilidad y escalabilidad.
 
-## 📋 Características del Diseño
+---
 
-El proyecto sigue una arquitectura estricta basada en patrones de diseño, tal como se define en los diagramas de arquitectura:
+## 🏗️ Arquitectura y Patrones de Diseño
 
-* **Singleton (`config.py`):** Para la gestión centralizada de configuración y rutas.
-* **Strategy (`metrics/`):** Polimorfismo para los algoritmos de cálculo de métricas.
-* **Facade (`metrics/facade.py`):** Simplificación del subsistema de análisis.
-* **Proxy (`proxy/`):** Intermediario para caché y optimización de peticiones repetidas.
-* **Mediator (`ui/`):** Desacoplamiento entre la lógica de negocio y los componentes de la interfaz de usuario.
+El núcleo del proyecto se basa en la separación de responsabilidades:
 
-## 🚀 Instalación y Configuración
+1.  **Singleton (`ConfigSingleton`):** Centralización de la configuración (rutas de BD, caché, parámetros).
+2.  **Strategy (`metrics/*.py`):** Implementación polimórfica de algoritmos de análisis. Permite añadir nuevas métricas (como LCOM o Cohesión) sin modificar el código existente (*Open/Closed Principle*).
+    * *Estrategias:* LOC, TODOs, Imports, Funciones (AST), Duplicación (Shingles), Mantenibilidad (MI Index).
+3.  **Facade (`MetricsFacade`):** Simplifica la complejidad del subsistema de métricas, ofreciendo una interfaz única de cálculo (`compute_all`).
+4.  **Proxy (`ProxySubject`):** Intermediario inteligente que gestiona la caché. Si un repositorio ya ha sido analizado, recupera los datos de SQLite en lugar de recalcular, optimizando el rendimiento.
+5.  **Mediator (`UIMediator`):** Desacopla totalmente la vista (Flask) de la lógica de negocio. Coordina los componentes de UI (`Input`, `Options`, `Output`, `History`).
 
-Sigue estos pasos para poner en marcha el proyecto en tu entorno local.
+---
 
-### 1. Requisitos Previos
+## ⚙️ Requisitos Previos
+
 * **Python 3.10** o superior.
-* **Git** instalado en el sistema.
+* **Git** instalado en el sistema (necesario para clonar repositorios externos).
 
-### 2. Clonar el repositorio
+---
+
+## 🚀 Instalación y Puesta en Marcha
+
+Sigue estos pasos para ejecutar la aplicación en tu entorno local:
+
+### 1. Clonar el proyecto e instalar dependencias
+
+Se recomienda usar un entorno virtual:
 
 ```bash
-git clone [https://github.com/rrf1003/2026_Practica_Final.git](https://github.com/TU_USUARIO/2026_Practica_Final.git)
+# Windows
+python -m venv venv
+venv\Scripts\activate
 
-cd 2026_Practica_Final
+# Mac/Linux
+python3 -m venv venv
+source venv/bin/activate
 
-## 📂 Estructura del Proyecto
+# Instalar librerías
+pip install -r requirements.txt
+```
 
-La estructura de archivos ha sido diseñada para asegurar la separación de responsabilidades:
+### 2. Ejecutar la aplicación
 
+Lanza el servidor web de Flask:
+**python app.py**
 
+La aplicación estará disponible en: **http://127.0.0.1:5000**
+La primera vez que analices un repositorio, se creará automáticamente la carpeta repo_cache/ y la base de datos analysis_v2.db.
+
+### 3. Ejecutar los Tests
+
+Desde la raíz del proyecto, ejecuta:
+**pytest**
+
+Si quieres ver qué porcentaje del código está cubierto por los tests:
+**pytest --cov=metrics**
+
+### Estructura del Proyecto
 2026_Practica_Final/
-├── app.py                 # Punto de entrada de la aplicación Flask
-├── config.py              # Configuración global (Singleton)
-├── requirements.txt       # Dependencias del proyecto
-├── .gitignore             # Exclusiones de Git (seguridad y limpieza)
-├── pics/                  # Recursos gráficos y diagramas
-├── metrics/               # Estrategias de análisis (Lógica de negocio)
-├── repo/                  # Gestión de persistencia (Git y SQLite)
-├── proxy/                 # Patrón Proxy (Caché)
-├── ui/                    # Capa de presentación (Mediator y Templates)
-└── tests/                 # Tests unitarios (Pytest)
+├── app.py                      # Punto de entrada (Flask)
+├── config.py                   # Singleton de Configuración
+├── pytest.ini                  # Configuración de los tests
+├── requirements.txt            # Dependencias
+├── README.md                   # Documentación
+├── analysis_v2.db              # Bases de Datos
+│
+├── pics/
+│
+├── metrics/                    # Lógica de Negocio (Patrón Strategy)
+│   ├── base.py                 # Interfaz abstracta
+│   ├── duplication.py          # Detecta la duplicación de código
+│   ├── facade.py               # Patrón Facade
+│   ├── functions.py            # Análisis AST (Complejidad, Nesting)
+│   ├── imports.py              # Numero de imports
+│   ├── lines.py                # Lineas totales del fichero
+│   ├── maintainability.py      # Índice de Mantenibilidad
+│
+├── proxy/                      # Patrón Proxy (Caché)
+│   ├── proxy_subject.py        # Lógica de Caché vs Cálculo Real
+│   └── subject_interface.py    # Interfaz común para el RealSubject y el Proxy.
+│
+├── repo/                  # Capa de Persistencia
+│   ├── db_manager.py      # Gestión SQLite
+│   └── repo_manager.py    # Gestión Git y Filesystem (Windows-safe)
+│
+├── ui/                    # Capa de Presentación (Patrón Mediator)
+│   ├── mediator.py        # Coordinador UI
+│   └── templates/         # Vistas HTML (Jinja2)
+│
+└── tests/                 # Tests Unitarios
+    ├── conftest.py        # Fixtures y datos de prueba
+    └── test_metrics.py    # Batería de pruebas
